@@ -29,3 +29,20 @@ export const createProject = async (project: IProjects) => {
 export const getProjects = async() =>{
   return memoryProjects;
 }
+/********* TAREA PUT Y DEL ********* */
+export const updateProject = ( id:string, project:IProjects) => {
+  const index = memoryProjects.findIndex(p => p._id === id);
+  if (index === -1) throw new Error('Project not found');
+  memoryProjects[index] = { ...memoryProjects[index], ...project, 
+  updatedAt: new Date() };
+  return memoryProjects[index];
+}
+
+export const deleteProject = (id:string) => {
+  const index = memoryProjects.findIndex(p => p._id === id);
+  if (index === -1) throw new Error('Project not found');
+  memoryProjects.splice(index, 1);
+  return true;
+}
+
+
