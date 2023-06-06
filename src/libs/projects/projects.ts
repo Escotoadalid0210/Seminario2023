@@ -29,8 +29,14 @@ export const createProject = async (project: IProjects) => {
 export const getProjects = async() =>{
   return memoryProjects;
 }
-/********* TAREA PUT Y DEL ********* */
-export const updateProject = ( id:string, project:IProjects) => {
+
+export const getProject = async (id:string)=>{
+  const project = memoryProjects.find(p => p._id === id);
+  if (!project) throw new Error("Project not found");
+  return project;
+}
+
+export const updateProject = ( id:string, project:Partial<IProjects>) => {
   const index = memoryProjects.findIndex(p => p._id === id);
   if (index === -1) throw new Error('Project not found');
   memoryProjects[index] = { ...memoryProjects[index], ...project, 
