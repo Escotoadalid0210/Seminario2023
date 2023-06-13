@@ -1,4 +1,5 @@
-export interface IProjects {
+import {ProjectsDao} from '@dao/models/ProjectsDao'
+export interface IProject {
     _id?: string;
     name: string;
     description: string;
@@ -7,48 +8,32 @@ export interface IProjects {
     updatedAt?: Date;
 }
 
-const newProject: IProjects = {
+const newProject: IProject = {
     name: '',
     description: '',
     isActive: false 
 }
 
-const memoryProjects: IProjects[] = [];
-//let createdProject: number = 0;
-let createdProject = 0;
+const ProjectDaoInstance = new ProjectsDao()
 
-export const createProject = async (project: IProjects) => {
-  const newProject = { ...project };
-  newProject._id = (++createdProject).toString();
-  newProject.CreatedAt = new Date();
-  newProject.updatedAt = newProject.CreatedAt;
-  memoryProjects.push(newProject);
-  return newProject;
+export const createProject = async (project: IProject) => {
+   return ProjectDaoInstance.create(project)
 };
 
-export const getProjects = async() =>{
-  return memoryProjects;
-}
+export const getProjects = () => {
+  return ProjectDaoInstance.find({});
+};
 
-export const getProject = async (id:string)=>{
-  const project = memoryProjects.find(p => p._id === id);
-  if (!project) throw new Error("Project not found");
-  return project;
-}
+export const getProject = (id:string)=>{
+  return ProjectDaoInstance.findOne(id);
+};
 
-export const updateProject = ( id:string, project:Partial<IProjects>) => {
-  const index = memoryProjects.findIndex(p => p._id === id);
-  if (index === -1) throw new Error('Project not found');
-  memoryProjects[index] = { ...memoryProjects[index], ...project, 
-  updatedAt: new Date() };
-  return memoryProjects[index];
+export const updateProject = ( id:string, project:Partial<IProject>) => {
+  return ProjectDaoInstance.update(id,project);
 }
 
 export const deleteProject = (id:string) => {
-  const index = memoryProjects.findIndex(p => p._id === id);
-  if (index === -1) throw new Error('Project not found');
-  memoryProjects.splice(index, 1);
-  return true;
+  return ProjectDaoInstance.delete(id);
 }
 
 
